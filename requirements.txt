@@ -1,0 +1,7 @@
+# Pinned to versions verified on Windows + Python 3.11 (fully free/offline).
+# No cloud, API keys, or freemium services.
+streamlit==1.32.0
+pandas==2.1.4
+plotly==5.24.1
+matplotlib==3.8.2
+pyinstaller==6.22.3
