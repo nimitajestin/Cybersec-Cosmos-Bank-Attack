@@ -1,9 +1,4 @@
-"""
-Offline architecture diagram (matplotlib — no Graphviz, no internet).
-
-Security concept: students should be able to point at the payment-switch
-hop as the trust boundary that, once bypassed, poisons every ATM.
-"""
+"""Offline architecture diagram (matplotlib)."""
 
 from __future__ import annotations
 
@@ -19,7 +14,7 @@ def architecture_png_path() -> Path:
     return bundled
 
 
-def _box(ax, x, y, w, h, text, facecolor, edge="#58a6ff") -> None:
+def _box(ax, x, y, w, h, text, facecolor, edge="#c17a3a") -> None:
     """Draw one labelled architecture node."""
     from matplotlib.patches import FancyBboxPatch
 
@@ -27,16 +22,16 @@ def _box(ax, x, y, w, h, text, facecolor, edge="#58a6ff") -> None:
         (x, y),
         w,
         h,
-        boxstyle="round,pad=0.02,rounding_size=0.08",
-        linewidth=1.6,
+        boxstyle="round,pad=0.02,rounding_size=0.04",
+        linewidth=1.4,
         edgecolor=edge,
         facecolor=facecolor,
     )
     ax.add_patch(patch)
-    ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", color="#e6edf3", fontsize=8.5, wrap=True)
+    ax.text(x + w / 2, y + h / 2, text, ha="center", va="center", color="#e8e1d5", fontsize=8.5, wrap=True)
 
 
-def _arrow(ax, x1, y1, x2, y2, color="#8b949e") -> None:
+def _arrow(ax, x1, y1, x2, y2, color="#9a9186") -> None:
     """Draw a directed edge between architecture nodes."""
     ax.annotate(
         "",
@@ -57,37 +52,37 @@ def generate_architecture_png(dest: Optional[Path] = None) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
 
     fig, ax = plt.subplots(figsize=(11, 5.6), dpi=120)
-    fig.patch.set_facecolor("#0e1117")
-    ax.set_facecolor("#0e1117")
+    fig.patch.set_facecolor("#161411")
+    ax.set_facecolor("#161411")
     ax.set_xlim(0, 11)
     ax.set_ylim(0, 6)
     ax.axis("off")
     ax.set_title(
-        "Cosmos Bank SOC Demo — Logical Architecture (fictional / offline)",
-        color="#e6edf3",
+        "Cosmos Bank SOC demo — logical architecture (offline / fictional)",
+        color="#e8e1d5",
         pad=12,
         fontsize=12,
     )
 
-    _box(ax, 0.4, 3.4, 2.2, 1.3, "ATM network\n(IN / UAE / TH / MY)\nfictional terminals", "#161b22", "#3fb950")
-    _box(ax, 3.4, 3.4, 2.4, 1.3, "Payment Switch\n(trust boundary)\n+ FIM SHA-256", "#3d0d0d", "#f85149")
-    _box(ax, 6.6, 3.4, 2.2, 1.3, "Core Banking\nbalance check\nAPPROVE / DECLINE", "#0d213d", "#58a6ff")
-    _box(ax, 9.1, 3.4, 1.6, 1.3, "Ledger\nSQLite", "#161b22", "#8b949e")
+    _box(ax, 0.4, 3.4, 2.2, 1.3, "ATM network\n(IN / UAE / TH / MY)\nfictional terminals", "#221e19", "#6d7f55")
+    _box(ax, 3.4, 3.4, 2.4, 1.3, "Payment Switch\n(trust boundary)\n+ FIM SHA-256", "#2a1614", "#a65a4a")
+    _box(ax, 6.6, 3.4, 2.2, 1.3, "Core Banking\nbalance check\nAPPROVE / DECLINE", "#1f1c18", "#c17a3a")
+    _box(ax, 9.1, 3.4, 1.6, 1.3, "Ledger\nSQLite", "#221e19", "#9a9186")
 
-    _box(ax, 3.4, 0.7, 2.4, 1.3, "SWIFT gateway\n(fictional msgs)\ndual-control", "#3d3200", "#d29922")
-    _box(ax, 6.6, 0.7, 2.2, 1.3, "SOC / SIEM\nrules R1–R6\nNIST response", "#0d3d1a", "#3fb950")
-    _box(ax, 0.4, 0.7, 2.2, 1.3, "Analyst UI\nStreamlit\n(this demo)", "#161b22", "#58a6ff")
+    _box(ax, 3.4, 0.7, 2.4, 1.3, "SWIFT gateway\n(fictional msgs)\ndual-control", "#2a2416", "#c9a66b")
+    _box(ax, 6.6, 0.7, 2.2, 1.3, "SOC / SIEM\nrules R1–R6\nNIST response", "#1a2418", "#6d7f55")
+    _box(ax, 0.4, 0.7, 2.2, 1.3, "Analyst UI\nStreamlit\n(this demo)", "#221e19", "#8b5a4a")
 
     _arrow(ax, 2.6, 4.05, 3.4, 4.05)
     _arrow(ax, 5.8, 4.05, 6.6, 4.05)
     _arrow(ax, 8.8, 4.05, 9.1, 4.05)
-    _arrow(ax, 4.6, 3.4, 4.6, 2.0, "#d29922")
-    _arrow(ax, 5.8, 1.35, 6.6, 1.35, "#3fb950")
+    _arrow(ax, 4.6, 3.4, 4.6, 2.0, "#c9a66b")
+    _arrow(ax, 5.8, 1.35, 6.6, 1.35, "#6d7f55")
     _arrow(ax, 2.6, 1.35, 3.4, 1.35)
-    _arrow(ax, 7.7, 3.4, 7.7, 2.0, "#3fb950")
+    _arrow(ax, 7.7, 3.4, 7.7, 2.0, "#6d7f55")
 
-    ax.text(5.5, 5.3, "Authorisation path (normal): ATM → Switch → Core → Switch → ATM", color="#8b949e", ha="center", fontsize=8)
-    ax.text(5.5, 0.25, "Compromise path (simulated): Switch ignores Core DECLINE → cash-out + SWIFT fraud", color="#f85149", ha="center", fontsize=8)
+    ax.text(5.5, 5.3, "Normal path: ATM → Switch → Core → Switch → ATM", color="#9a9186", ha="center", fontsize=8)
+    ax.text(5.5, 0.25, "Compromise (simulated): switch ignores Core DECLINE → cash-out + SWIFT fraud", color="#a65a4a", ha="center", fontsize=8)
 
     fig.tight_layout()
     fig.savefig(dest, facecolor=fig.get_facecolor())

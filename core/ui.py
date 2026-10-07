@@ -1,9 +1,4 @@
-"""
-Shared Streamlit chrome: disclaimer, SOC dark CSS, INR formatting, sidebar status.
-
-Security concept: every screen repeats the educational disclaimer so a live
-demo cannot be mistaken for a real bank console.
-"""
+"""Shared Streamlit layout: disclaimer, CSS, INR format, sidebar."""
 
 from __future__ import annotations
 
@@ -18,55 +13,56 @@ from core.incident_response import nist_checklist
 
 SOC_CSS = """
 <style>
+    div[data-testid="stDecoration"] { display: none; }
+    .stApp { background-color: #161411; }
+    [data-testid="stSidebar"] { background-color: #1c1915; border-right: 1px solid #3a342c; }
     .disclaimer-banner {
-        background: linear-gradient(90deg, #3d1a00, #5a2200);
-        border: 1px solid #ff8c32;
-        color: #ffe6cc;
-        padding: 0.7rem 1rem;
-        border-radius: 8px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
+        background: #2a2018;
+        border: 1px solid #8a5a32;
+        color: #e4d3c0;
+        padding: 0.65rem 1rem;
+        border-radius: 4px;
+        font-weight: 600;
         margin-bottom: 0.8rem;
         text-align: center;
     }
     .scale-note {
-        background: #1b2838;
-        border-left: 4px solid #58a6ff;
+        background: #1f1c18;
+        border-left: 3px solid #c17a3a;
         padding: 0.55rem 0.8rem;
-        color: #c9d1d9;
-        border-radius: 4px;
+        color: #cfc6b8;
+        border-radius: 0 4px 4px 0;
         margin: 0.4rem 0 0.8rem 0;
         font-size: 0.92rem;
     }
     .mismatch-wrap { display: flex; gap: 12px; }
     .panel {
-        border-radius: 10px;
+        border-radius: 4px;
         padding: 1rem 1.1rem;
         min-height: 140px;
-        border: 1px solid #30363d;
+        border: 1px solid #3a342c;
     }
-    .panel h3 { margin: 0 0 0.4rem 0; font-size: 0.95rem; letter-spacing: 0.08em; }
+    .panel h3 { margin: 0 0 0.4rem 0; font-size: 0.85rem; letter-spacing: 0.06em; color: inherit; }
     .panel .big {
-        font-size: 1.8rem;
-        font-weight: 800;
+        font-size: 1.65rem;
+        font-weight: 700;
         margin: 0.35rem 0;
     }
-    .panel-red { background: #3d0d0d; border-color: #f85149; color: #ffb4b0; }
-    .panel-green { background: #0d3d1a; border-color: #3fb950; color: #aff5b4; }
-    .panel-amber { background: #3d3200; border-color: #d29922; color: #ffe08a; }
-    .panel-blue { background: #0d213d; border-color: #58a6ff; color: #a8d4ff; }
-    .panel-mute { background: #161b22; color: #c9d1d9; }
+    .panel-red { background: #2a1614; border-color: #a65a4a; color: #e8b8ae; }
+    .panel-green { background: #1a2418; border-color: #6d7f55; color: #c5d4b0; }
+    .panel-amber { background: #2a2416; border-color: #c17a3a; color: #e8d0a8; }
+    .panel-mute { background: #221e19; color: #cfc6b8; }
     .kpi {
-        background: #161b22;
-        border: 1px solid #30363d;
-        border-radius: 10px;
+        background: #221e19;
+        border: 1px solid #3a342c;
+        border-radius: 4px;
         padding: 0.8rem 1rem;
     }
-    .kpi .lbl { color: #8b949e; font-size: 0.8rem; text-transform: uppercase; }
-    .kpi .val { font-size: 1.5rem; font-weight: 800; color: #e6edf3; }
-    .sev-crit { color: #ff6b6b; font-weight: 800; }
-    .sev-high { color: #ffa657; font-weight: 800; }
-    .sev-med { color: #ffe08a; font-weight: 700; }
+    .kpi .lbl { color: #9a9186; font-size: 0.8rem; text-transform: uppercase; }
+    .kpi .val { font-size: 1.45rem; font-weight: 700; color: #e8e1d5; }
+    .sev-crit { color: #c45c4a; font-weight: 700; }
+    .sev-high { color: #c17a3a; font-weight: 700; }
+    .sev-med { color: #c9a66b; font-weight: 600; }
     code.hash { font-size: 0.78rem; word-break: break-all; }
 </style>
 """
@@ -197,14 +193,16 @@ def mismatch_panels(core: str, switch: str, atm: str, block_reason: Optional[str
 
 
 def plotly_dark(fig: Any) -> Any:
-    """Apply a SOC-console Plotly theme that works fully offline."""
+    """Apply a muted Plotly theme that matches the rest of the console."""
     fig.update_layout(
-        template="plotly_dark",
         paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#e6edf3"),
+        plot_bgcolor="#1c1915",
+        font=dict(color="#e8e1d5"),
+        colorway=["#c17a3a", "#6d7f55", "#8b5a4a", "#c9a66b", "#5c6b73"],
         margin=dict(l=40, r=20, t=50, b=40),
         legend=dict(bgcolor="rgba(0,0,0,0)"),
+        xaxis=dict(gridcolor="#3a342c", zerolinecolor="#3a342c"),
+        yaxis=dict(gridcolor="#3a342c", zerolinecolor="#3a342c"),
     )
     return fig
 

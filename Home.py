@@ -1,38 +1,25 @@
-"""
-Cosmos Bank Cyber Attack Simulation & SOC Response System
-Streamlit entry point (Home). All data is fictional and fully offline.
-
-Security concept: an analyst workstation that tells a linear incident story —
-normal ops → compromise → cash-out → detection → containment → defense.
-"""
+"""Home page for the Cosmos Bank SOC Streamlit demo."""
 
 from __future__ import annotations
 
 import streamlit as st
 
 from core import database as db
-from core.constants import DISCLAIMER
 from core.diagram import ensure_architecture_png
 from core.ui import format_inr, kpi, page_setup, scale_note, safe_error
 
-state = page_setup("Cosmos Bank SOC Simulation", "🛡️")
+page_setup("Cosmos Bank SOC Simulation", "🛡️")
 
-st.caption(
-    "Academic desktop demo of a *fictional* payment-switch compromise, "
-    "ATM cash-out, SWIFT fraud, and NIST-aligned SOC response. "
-    "No real malware, no real banks, no network attacks."
-)
+st.caption("Offline lab. Fictional cards and amounts only.")
 scale_note()
 
-st.markdown("### Case-study context (historical, for the report)")
+st.markdown("### Case study (2018)")
 st.markdown(
     """
-In **August 2018**, **Cosmos Co-operative Bank (Pune)** was reported to have suffered a
-cyber incident involving a **compromised payment switch**, **international ATM cash-out**,
-and **fraudulent SWIFT messages**. Public reporting described losses on the order of
-**₹90+ crore**. This application **does not replay malware or live bank protocols**.
-It is a **scaled, fictional laboratory** so students can see *why* switch/core
-reconciliation, velocity limits, geo-anomaly controls, FIM, and SWIFT dual-control matter.
+**Cosmos Co-operative Bank, Pune** — public reporting described a compromised
+**payment switch**, **ATM cash-out** from several countries, and **unauthorised SWIFT**
+messages. Losses were on the order of **₹90+ crore**. This app models the *control
+failures* (switch vs core, velocity, geo, FIM, dual-control), not malware or live protocols.
 """
 )
 
@@ -61,40 +48,22 @@ with c3:
 with c4:
     kpi("Simulated cash-out loss", format_inr(loss))
 
-st.markdown("### Live demo path (mouse-only, in this order)")
+st.markdown("### Suggested order")
 st.markdown(
     """
-1. **Normal Operation** — approve a legitimate ATM withdrawal; show the full hop-by-hop flow.  
-2. **Switch Compromise** — press **SIMULATE SWITCH COMPROMISE**; watch Core **DECLINED** vs Switch **APPROVED** and the FIM hash change.  
-3. **ATM Cash-Out** — press **START ATM CASH-OUT**; watch volume, loss, and country charts.  
-4. **SOC Dashboard** — read colour-coded alerts R1–R6 and the 10:00–10:09 timeline.  
-5. **Containment** (SOC page) — **ISOLATE PAYMENT SWITCH** / **LOCK SWIFT INTERFACE**.  
-6. **ENABLE SECURITY CONTROLS** then run the **same** cash-out again — fraud should be **BLOCKED**.  
-7. **SWIFT Fraud**, **Investigation**, **Frameworks** — value-based fraud, evidence, Kill Chain / MITRE / NIST.
+1. **Normal Operation** — legitimate withdrawal, hop-by-hop.  
+2. **Switch Compromise** — toggle compromise; core DECLINED vs switch APPROVED; FIM hash.  
+3. **ATM Cash-Out** — burst of fictional withdrawals.  
+4. **SOC Dashboard** — alerts R1–R6, isolate switch, lock SWIFT, enable controls, replay.  
+5. **SWIFT Fraud**, **Investigation**, **Frameworks**.
 """
 )
 
 st.markdown("### Architecture")
 try:
     png = ensure_architecture_png()
-    st.image(str(png), caption="Generated locally with matplotlib (no internet, no Graphviz).")
+    st.image(str(png), caption="ATM → switch → core. The switch is the trust boundary.")
 except Exception as exc:
-    st.warning(f"Architecture diagram could not be rendered: {exc}")
+    st.warning(f"Could not load architecture diagram: {exc}")
 
-st.markdown(
-    """
-```
-  [ATM network] --> [Payment Switch + FIM] --> [Core Banking / ledger]
-                          |                         |
-                          v                         v
-                   [SWIFT gateway]            [SOC rules R1-R6]
-                          |                         |
-                          +--------> [NIST containment] <------+
-```
-"""
-)
-
-st.info(
-    f"{DISCLAIMER}  |  Open the pages in the left sidebar. Simulation state is stored in local SQLite, "
-    "so it survives switching tabs."
-)
+st.caption("Use the sidebar pages. State is stored in local SQLite.")

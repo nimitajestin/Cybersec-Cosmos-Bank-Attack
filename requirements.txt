@@ -1,5 +1,4 @@
-# Pinned from the isolated venv (Python 3.11, Windows). Direct + transitive.
-# Direct: streamlit==1.32.0 pandas==2.1.4 plotly==5.24.1 matplotlib==3.8.2 pyinstaller==6.22.3
+# Python 3.11 / Windows. Direct deps: streamlit 1.32.0, pandas 2.1.4, plotly 5.24.1, matplotlib 3.8.2, pyinstaller 6.22.3
 altair==5.5.0
 altgraph==0.17.5
 attrs==26.1.0
