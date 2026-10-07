@@ -4,8 +4,6 @@ Educational Streamlit lab based on the **2018 Cosmos Co-operative Bank (Pune)** 
 
 All banks, cards, and amounts in this repo are **fictional**. Nothing talks to a real bank or network. Amounts are scaled (`₹1 lakh` in the demo ≈ `₹1 crore` in the public case).
 
-**Repo:** [github.com/nimitajestin/Cybersec-Cosmos-Bank-Attack](https://github.com/nimitajestin/Cybersec-Cosmos-Bank-Attack)
-
 ## Setup
 
 Python 3.10+ (tested on 3.11, Windows). Use a venv so other packages on the machine do not clash.
