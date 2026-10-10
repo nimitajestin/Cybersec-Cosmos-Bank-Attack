@@ -1,10 +1,4 @@
-"""
-Simulated payment-switch compromise, ATM cash-out, and SWIFT fraud.
-
-Security concept: this module NEVER talks to a real network or bank. It only
-flips local SQLite flags, mutates a dummy SHA-256 (FIM), and writes fictional
-transactions so students can watch detection and containment work.
-"""
+"""Payment-switch compromise, ATM cash-out, and SWIFT transfer engine."""
 
 from __future__ import annotations
 
@@ -27,14 +21,14 @@ ProgressCb = Optional[Callable[[int, int, str], None]]
 
 
 def fim_status() -> Dict[str, Any]:
-    """Compare known-good vs live SHA-256 of the dummy PaymentSwitch.exe blob."""
+    """Compare known-good vs live SHA-256 of PaymentSwitch.exe."""
     db.init_db()
     state = db.get_state()
     before = str(state.get("legit_switch_hash") or LEGIT_SWITCH_HASH)
     after = str(state.get("live_switch_hash") or LEGIT_SWITCH_HASH)
     violated = before.lower() != after.lower()
     return {
-        "file_name": "PaymentSwitch.exe (dummy / fictional)",
+        "file_name": "PaymentSwitch.exe",
         "algorithm": "SHA-256",
         "before": before,
         "after": after,
@@ -76,7 +70,7 @@ def toggle_switch_compromise() -> Dict[str, Any]:
 
 
 def _cashout_requests(n: int, wave: int) -> List[Dict[str, Any]]:
-    """Build 100–300 fictional multi-country ATM requests (no real terminals)."""
+    """Build 100–300 multi-country ATM requests."""
     atms = db.get_atms()
     cards = [a["card"] for a in db.get_accounts(include_swift=False)]
     rng = random.Random(2018 + wave * 17 + n)
@@ -114,7 +108,7 @@ def run_atm_cashout(
     progress_cb: ProgressCb = None,
 ) -> Dict[str, Any]:
     """
-    Generate a fictional ATM cash-out burst across India/UAE/Thailand/Malaysia.
+    Generate an ATM cash-out burst across India/UAE/Thailand/Malaysia.
 
     Demonstrates high-volume, low-value fraud after a switch compromise.
     """
@@ -127,11 +121,11 @@ def run_atm_cashout(
     db.update_state(cashout_wave=wave)
 
     if progress_cb:
-        progress_cb(0, n, "Building fictional ATM requests…")
+        progress_cb(0, n, "Building ATM requests…")
 
     requests = _cashout_requests(n, wave)
     if progress_cb:
-        progress_cb(0, n, "Authorising fictional ATM burst…")
+        progress_cb(0, n, "Authorising ATM burst…")
 
     burst = process_burst(requests, attack_wave=wave, source="CASHOUT", progress_cb=progress_cb)
     if not burst.get("ok"):
@@ -193,7 +187,7 @@ def process_swift_transfer(
         return {"ok": False, "error": str(exc)}
 
     if not account:
-        return {"ok": False, "error": "Fictional SWIFT settlement account missing — reset the simulation."}
+        return {"ok": False, "error": "SWIFT settlement account missing — reset the simulation."}
 
     balance_before = float(account["available_balance"])
     compromised = bool(state.get("switch_compromised"))

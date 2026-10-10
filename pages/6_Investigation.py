@@ -100,7 +100,6 @@ with right:
         ("Switch decision captured", bool(txn.get("switch_decision")), str(txn.get("switch_decision"))),
         ("Alert generated", bool(alerts), f"{len(alerts)} alert(s)" if alerts else "No rule fired"),
         ("FIM context (incident-wide)", True, "See Switch Compromise page for SHA-256 before/after"),
-        ("Scale disclaimer", True, "Amounts are fictional / scaled"),
     ]
     for title, ok, note in checks:
         st.write(f"{'✅' if ok else '❌'} **{title}** — {note}")

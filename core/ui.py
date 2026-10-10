@@ -1,4 +1,4 @@
-"""Shared Streamlit layout: disclaimer, CSS, INR format, sidebar."""
+"""Shared Streamlit layout: CSS, INR format, sidebar."""
 
 from __future__ import annotations
 
@@ -8,7 +8,6 @@ import pandas as pd
 import streamlit as st
 
 from core import database as db
-from core.constants import DISCLAIMER, SCALE_DISCLAIMER
 from core.incident_response import nist_checklist
 
 SOC_CSS = """
@@ -16,25 +15,6 @@ SOC_CSS = """
     div[data-testid="stDecoration"] { display: none; }
     .stApp { background-color: #161411; }
     [data-testid="stSidebar"] { background-color: #1c1915; border-right: 1px solid #3a342c; }
-    .disclaimer-banner {
-        background: #2a2018;
-        border: 1px solid #8a5a32;
-        color: #e4d3c0;
-        padding: 0.65rem 1rem;
-        border-radius: 4px;
-        font-weight: 600;
-        margin-bottom: 0.8rem;
-        text-align: center;
-    }
-    .scale-note {
-        background: #1f1c18;
-        border-left: 3px solid #c17a3a;
-        padding: 0.55rem 0.8rem;
-        color: #cfc6b8;
-        border-radius: 0 4px 4px 0;
-        margin: 0.4rem 0 0.8rem 0;
-        font-size: 0.92rem;
-    }
     .mismatch-wrap { display: flex; gap: 12px; }
     .panel {
         border-radius: 4px;
@@ -94,16 +74,6 @@ def inject_css() -> None:
     st.markdown(SOC_CSS, unsafe_allow_html=True)
 
 
-def disclaimer() -> None:
-    """Hardcoded educational banner required on every screen."""
-    st.markdown(f'<div class="disclaimer-banner">{DISCLAIMER}</div>', unsafe_allow_html=True)
-
-
-def scale_note() -> None:
-    """Remind the audience that demo rupees are scaled, not the 2018 totals."""
-    st.markdown(f'<div class="scale-note">{SCALE_DISCLAIMER}</div>', unsafe_allow_html=True)
-
-
 def page_setup(title: str, icon: str = "🛡️") -> Dict[str, Any]:
     """Standard header + sidebar used by every multipage script (survives tab switches via SQLite)."""
     st.set_page_config(
@@ -113,7 +83,6 @@ def page_setup(title: str, icon: str = "🛡️") -> Dict[str, Any]:
         initial_sidebar_state="expanded",
     )
     inject_css()
-    disclaimer()
     st.title(f"{icon} {title}")
     state = render_sidebar()
     return state
@@ -146,8 +115,6 @@ def render_sidebar() -> Dict[str, Any]:
     for stage in nist:
         mark = "✅" if stage.get("completed") else "⬜"
         st.sidebar.caption(f"{mark} {stage['stage']}")
-    st.sidebar.markdown("---")
-    st.sidebar.caption("Offline educational demo. No real banks, cards, or networks.")
     return state
 
 

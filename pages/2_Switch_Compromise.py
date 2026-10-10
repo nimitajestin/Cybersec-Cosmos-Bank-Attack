@@ -18,9 +18,9 @@ from core.ui import format_inr, mismatch_panels, page_setup, safe_error
 state = page_setup("Switch Compromise", "⚠️")
 
 st.markdown(
-    "This page is the **centrepiece**. A healthy switch **must** copy Core Banking. "
-    "After the simulated compromise it **approves withdrawals even when core declines** "
-    "(insufficient funds). No real executable is modified — only two dummy blobs are hashed."
+    "A healthy switch **must** copy Core Banking. After compromise it **approves "
+    "withdrawals even when core declines** (insufficient funds). FIM compares SHA-256 "
+    "hashes of PaymentSwitch.exe before and after the change."
 )
 
 compromised = bool(state.get("switch_compromised"))
@@ -36,7 +36,7 @@ if st.button(btn_label, type="primary", use_container_width=True):
     st.success(out["message"])
     st.rerun()
 
-st.markdown("#### File Integrity Monitoring (SHA-256 of dummy PaymentSwitch.exe)")
+st.markdown("#### File Integrity Monitoring (SHA-256 of PaymentSwitch.exe)")
 try:
     fim = fim_status()
 except db.DatabaseError as exc:
@@ -93,7 +93,7 @@ if rec:
         if rec["core_decision"] == "DECLINED" and rec["switch_decision"] == "APPROVED":
             st.error(
                 "Mismatch: Core Banking said DECLINED but the switch returned APPROVED and the ATM "
-                f"shows {rec['atm_result']}. Simulated bank loss = {format_inr(rec['amount'])} "
+                f"shows {rec['atm_result']}. Bank loss = {format_inr(rec['amount'])} "
                 "(ledger was NOT debited)."
             )
         elif rec["status"] == "BLOCKED":

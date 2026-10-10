@@ -22,10 +22,9 @@ from core.incident_response import (
     reset_simulation,
     restore_switch_integrity,
 )
-from core.ui import format_inr, kpi, page_setup, plotly_dark, safe_dataframe, safe_error, safe_table, scale_note
+from core.ui import format_inr, kpi, page_setup, plotly_dark, safe_dataframe, safe_error, safe_table
 
 state = page_setup("SOC Dashboard", "🛰️")
-scale_note()
 
 # ----- Containment / defense controls (mouse-only) -----
 st.markdown("### Containment & defense")
@@ -98,7 +97,7 @@ with k3:
 with k4:
     kpi("Blocked txns", str(blocked))
 with k5:
-    kpi("Simulated ATM loss", format_inr(loss))
+    kpi("ATM cash-out loss", format_inr(loss))
 
 # ----- NIST checklist -----
 st.markdown("### NIST SP 800-61 lifecycle")

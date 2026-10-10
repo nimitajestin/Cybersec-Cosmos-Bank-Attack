@@ -13,7 +13,7 @@ if exist venv\Scripts\python.exe (
 
 echo.
 echo === CosmosBankDemo :: PyInstaller --onedir ===
-echo EDUCATIONAL SIMULATION — fictional banks/cards/transactions only.
+echo Building CosmosBankDemo...
 echo.
 
 "%PY%" -m pip install -r requirements.txt

@@ -8,7 +8,7 @@ cd /d "%~dp0"
 
 echo.
 echo === Cosmos Bank SOC Demo :: PyInstaller build ===
-echo EDUCATIONAL SIMULATION — fictional banks/cards/transactions only.
+echo Building Cosmos Bank SOC...
 echo.
 
 python -m pip install -r requirements.txt

@@ -14,16 +14,14 @@ import streamlit as st
 from core import database as db
 from core.attack_engine import process_swift_transfer
 from core.constants import SWIFT_AMOUNT, SWIFT_BENEFICIARY
-from core.ui import format_inr, mismatch_panels, page_setup, safe_dataframe, safe_error, scale_note
+from core.ui import format_inr, mismatch_panels, page_setup, safe_dataframe, safe_error
 
 state = page_setup("SWIFT Fraud", "🏦")
-scale_note()
 
 st.markdown(
     "This tab is **isolated from the ATM flow**. It models one large unauthorised "
-    "payment message toward **Hong Kong Bank (fictional)** after the environment "
-    "is marked compromised. Dual-control / whitelist checks run only when "
-    "**ENABLE SECURITY CONTROLS** is on."
+    "payment toward **Hong Kong Bank** after the environment is marked compromised. "
+    "Dual-control / whitelist checks run only when **ENABLE SECURITY CONTROLS** is on."
 )
 
 s1, s2, s3 = st.columns(3)
@@ -31,7 +29,7 @@ s1.metric("Environment compromised", "YES" if state.get("switch_compromised") el
 s2.metric("SWIFT interface", "LOCKED" if state.get("swift_locked") else "OPEN")
 s3.metric("Security controls", "ON" if state.get("security_controls") else "OFF")
 
-st.markdown("#### Payment message (fictional)")
+st.markdown("#### Payment message")
 c1, c2 = st.columns(2)
 with c1:
     st.text_input("Debit account (masked)", value="XXXX-XXXX-SW01", disabled=True)
@@ -86,14 +84,14 @@ try:
                 "Pattern": "High volume, many countries, moderate ticket",
                 "Txns (excl. seed)": int(atm.get("volume") or 0),
                 "Gross value (₹)": format_inr(atm.get("value") or 0),
-                "Simulated fraud value (₹)": format_inr(atm.get("fraud_value") or 0),
+                "Fraud value (₹)": format_inr(atm.get("fraud_value") or 0),
             },
             {
                 "Rail": "SWIFT fraud",
                 "Pattern": "Low volume, single high-value payment message",
                 "Txns (excl. seed)": int(swift.get("volume") or 0),
                 "Gross value (₹)": format_inr(swift.get("value") or 0),
-                "Simulated fraud value (₹)": format_inr(swift.get("fraud_value") or 0),
+                "Fraud value (₹)": format_inr(swift.get("fraud_value") or 0),
             },
         ]
     )

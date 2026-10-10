@@ -1,5 +1,5 @@
 """
-ATM → Payment Switch → Core Banking simulator (fully local, fictional).
+ATM → Payment Switch → Core Banking simulator.
 
 Security concept: in a healthy payment switch, the ATM only dispenses cash
 when *core banking* authorises the debit. A compromised switch that ignores
@@ -191,11 +191,11 @@ def process_atm_withdrawal(
         return {"ok": False, "error": str(exc)}
 
     if not account:
-        return {"ok": False, "error": "Unknown fictional card. Select a card from the list."}
+        return {"ok": False, "error": "Unknown card. Select a card from the list."}
     if account.get("status") != "ACTIVE":
         return {"ok": False, "error": "Account is not ACTIVE in the simulation."}
     if not atm:
-        return {"ok": False, "error": "Unknown fictional ATM ID."}
+        return {"ok": False, "error": "Unknown ATM ID."}
 
     record = authorise_atm(
         state=state,

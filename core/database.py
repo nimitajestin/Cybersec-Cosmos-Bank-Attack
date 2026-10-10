@@ -1,11 +1,4 @@
-"""
-SQLite persistence for the educational SOC simulation.
-
-Security concept: a SIEM-like store of transactions, alerts, and incident
-state so analysts can reconstruct an attack timeline after the fact.
-Everything is local, fictional, and wrapped in try/except so a missing or
-corrupt DB never crashes the Streamlit UI.
-"""
+"""SQLite store for transactions, alerts, and incident state."""
 
 from __future__ import annotations
 
@@ -115,15 +108,15 @@ NIST_STAGES = [
     ("Lessons Learned", 7),
 ]
 
-# Fictional retail customers / ATMs only — never real PAN or bank identifiers.
+# Seeded cardholders / ATMs.
 SEED_ACCOUNTS = [
-    ("XXXX-XXXX-1001", "A. Kulkarni (fictional)", 50000.0, "India"),
-    ("XXXX-XXXX-2847", "S. Mehta (fictional)", 12000.0, "India"),
-    ("XXXX-XXXX-3391", "R. Iyer (fictional)", 250000.0, "India"),
-    ("XXXX-XXXX-4520", "N. Sharma (fictional)", 8500.0, "India"),
-    ("XXXX-XXXX-6677", "P. Deshmukh (fictional)", 120000.0, "India"),
-    ("XXXX-XXXX-8901", "K. Banerjee (fictional)", 3200.0, "India"),
-    ("XXXX-XXXX-SW01", "Nostro Settlement Desk (fictional)", 500000000.0, "India"),
+    ("XXXX-XXXX-1001", "A. Kulkarni", 50000.0, "India"),
+    ("XXXX-XXXX-2847", "S. Mehta", 12000.0, "India"),
+    ("XXXX-XXXX-3391", "R. Iyer", 250000.0, "India"),
+    ("XXXX-XXXX-4520", "N. Sharma", 8500.0, "India"),
+    ("XXXX-XXXX-6677", "P. Deshmukh", 120000.0, "India"),
+    ("XXXX-XXXX-8901", "K. Banerjee", 3200.0, "India"),
+    ("XXXX-XXXX-SW01", "Nostro Settlement Desk", 500000000.0, "India"),
 ]
 
 SEED_ATMS = [
@@ -185,7 +178,7 @@ def get_conn():
 
 
 def init_db() -> None:
-    """Create schema and seed fictional data so the app never starts empty."""
+    """Create schema and seed data so the app never starts empty."""
     with _LOCK:
         try:
             with get_conn() as conn:
@@ -250,7 +243,7 @@ def _ensure_nist(conn: sqlite3.Connection) -> None:
 
 
 def _seed_master_data(conn: sqlite3.Connection) -> None:
-    """Load fictional cards and ATM locations used throughout the demo."""
+    """Load cards and ATM locations used throughout the demo."""
     for card, holder, balance, country in SEED_ACCOUNTS:
         conn.execute(
             """
@@ -268,6 +261,7 @@ def _seed_master_data(conn: sqlite3.Connection) -> None:
             """,
             (atm_id, country, city),
         )
+    conn.execute("UPDATE accounts SET holder_name = REPLACE(holder_name, ' (fictional)', '')")
 
 
 def _seed_baseline_transactions(conn: sqlite3.Connection) -> None:
@@ -383,7 +377,7 @@ def update_state(**fields: Any) -> Dict[str, Any]:
 
 
 def get_accounts(include_swift: bool = False) -> List[Dict[str, Any]]:
-    """List fictional card accounts shown in ATM / investigation screens."""
+    """List card accounts shown in ATM / investigation screens."""
     init_db()
     with get_conn() as conn:
         if include_swift:
@@ -396,7 +390,7 @@ def get_accounts(include_swift: bool = False) -> List[Dict[str, Any]]:
 
 
 def get_account(card: str) -> Optional[Dict[str, Any]]:
-    """Look up one fictional account by masked card number."""
+    """Look up one account by masked card number."""
     init_db()
     with get_conn() as conn:
         row = conn.execute("SELECT * FROM accounts WHERE card = ?", (card,)).fetchone()
@@ -421,7 +415,7 @@ def restore_balances() -> None:
 
 
 def get_atms() -> List[Dict[str, Any]]:
-    """List fictional ATM endpoints used in the cash-out simulation."""
+    """List ATM endpoints used in the cash-out simulation."""
     init_db()
     with get_conn() as conn:
         rows = conn.execute("SELECT * FROM atms ORDER BY country, atm_id").fetchall()
@@ -429,7 +423,7 @@ def get_atms() -> List[Dict[str, Any]]:
 
 
 def get_atm(atm_id: str) -> Optional[Dict[str, Any]]:
-    """Look up one fictional ATM by ID."""
+    """Look up one ATM by ID."""
     init_db()
     with get_conn() as conn:
         row = conn.execute("SELECT * FROM atms WHERE atm_id = ?", (atm_id,)).fetchone()

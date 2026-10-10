@@ -13,16 +13,15 @@ import streamlit as st
 
 from core import database as db
 from core.attack_engine import run_atm_cashout
-from core.ui import format_inr, page_setup, plotly_dark, safe_dataframe, safe_error, scale_note
+from core.ui import format_inr, page_setup, plotly_dark, safe_dataframe, safe_error
 
 state = page_setup("ATM Cash-Out", "💸")
-scale_note()
 
 st.markdown(
-    "Press **START ATM CASH-OUT** to generate **100–300 fictional** withdrawals "
+    "Press **START ATM CASH-OUT** to generate **100–300** withdrawals "
     "across **India, UAE, Thailand, Malaysia**. If the switch is compromised and "
-    "controls are off, cash is 'dispensed' even when core declines. "
-    "Run it again after **ENABLE SECURITY CONTROLS** (SOC page) to show the defense finale."
+    "controls are off, cash is dispensed even when core declines. "
+    "Run it again after **ENABLE SECURITY CONTROLS** (SOC page) to compare before/after."
 )
 
 if not state.get("switch_compromised") and not state.get("security_controls"):
@@ -32,7 +31,7 @@ if state.get("switch_isolated"):
 if state.get("security_controls"):
     st.success("Defense mode is ON — fraudulent rows should be BLOCKED (before/after comparison).")
 
-n = st.slider("How many fictional ATM transactions?", min_value=100, max_value=300, value=160, step=10)
+n = st.slider("How many ATM transactions?", min_value=100, max_value=300, value=160, step=10)
 
 placeholder = st.empty()
 bar = st.progress(0, text="Idle")
@@ -72,7 +71,7 @@ k1, k2, k3, k4 = st.columns(4)
 k1.metric("Latest wave", str(wave or "—"))
 k2.metric("Txns in latest wave", str(len(latest_wave)))
 k3.metric("Blocked", str(blocked))
-k4.metric("Fictional loss (this wave)", format_inr(loss))
+k4.metric("Loss (this wave)", format_inr(loss))
 
 if latest_wave:
     df = pd.DataFrame(latest_wave)
@@ -107,7 +106,7 @@ if latest_wave:
     country_rows = db.loss_by_country(wave=wave if wave else None)
     if country_rows:
         cdf = pd.DataFrame(country_rows)
-        fig2 = px.bar(cdf, x="country", y="loss", title="Simulated loss by country (₹)")
+        fig2 = px.bar(cdf, x="country", y="loss", title="Loss by country (₹)")
         st.plotly_chart(plotly_dark(fig2), use_container_width=True)
 
     waves = db.wave_loss_summary()

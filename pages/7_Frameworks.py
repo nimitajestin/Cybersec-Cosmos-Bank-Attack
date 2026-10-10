@@ -59,7 +59,7 @@ kill = pd.DataFrame(
         {
             "Stage": "7. Actions on Objectives",
             "Status": "Documented in demo",
-            "In this lab / public case": "ATM cash-out across fictional IN/UAE/TH/MY terminals; SWIFT transfer to Hong Kong Bank (fictional).",
+            "In this lab / public case": "ATM cash-out across IN/UAE/TH/MY terminals; SWIFT transfer to Hong Kong Bank.",
         },
     ]
 )
@@ -104,7 +104,7 @@ nist_explain = {
     "Containment": "ISOLATE PAYMENT SWITCH and LOCK SWIFT INTERFACE (fail closed).",
     "Eradication": "ENABLE SECURITY CONTROLS (FIM, reconciliation, velocity, geo, SWIFT verify).",
     "Recovery": "RESTORE SWITCH to the known-good SHA-256; RESET SIMULATION for the next demo.",
-    "Lessons Learned": "This page — kill chain honesty, MITRE caution, scaled-loss disclaimer.",
+    "Lessons Learned": "This page — kill chain unknowns, MITRE mapping.",
 }
 rows = []
 for stage in nist:

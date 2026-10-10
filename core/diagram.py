@@ -58,18 +58,18 @@ def generate_architecture_png(dest: Optional[Path] = None) -> Path:
     ax.set_ylim(0, 6)
     ax.axis("off")
     ax.set_title(
-        "Cosmos Bank SOC demo — logical architecture (offline / fictional)",
+        "Cosmos Bank SOC demo — logical architecture",
         color="#e8e1d5",
         pad=12,
         fontsize=12,
     )
 
-    _box(ax, 0.4, 3.4, 2.2, 1.3, "ATM network\n(IN / UAE / TH / MY)\nfictional terminals", "#221e19", "#6d7f55")
+    _box(ax, 0.4, 3.4, 2.2, 1.3, "ATM network\n(IN / UAE / TH / MY)", "#221e19", "#6d7f55")
     _box(ax, 3.4, 3.4, 2.4, 1.3, "Payment Switch\n(trust boundary)\n+ FIM SHA-256", "#2a1614", "#a65a4a")
     _box(ax, 6.6, 3.4, 2.2, 1.3, "Core Banking\nbalance check\nAPPROVE / DECLINE", "#1f1c18", "#c17a3a")
     _box(ax, 9.1, 3.4, 1.6, 1.3, "Ledger\nSQLite", "#221e19", "#9a9186")
 
-    _box(ax, 3.4, 0.7, 2.4, 1.3, "SWIFT gateway\n(fictional msgs)\ndual-control", "#2a2416", "#c9a66b")
+    _box(ax, 3.4, 0.7, 2.4, 1.3, "SWIFT gateway\ndual-control", "#2a2416", "#c9a66b")
     _box(ax, 6.6, 0.7, 2.2, 1.3, "SOC / SIEM\nrules R1–R6\nNIST response", "#1a2418", "#6d7f55")
     _box(ax, 0.4, 0.7, 2.2, 1.3, "Analyst UI\nStreamlit\n(this demo)", "#221e19", "#8b5a4a")
 
